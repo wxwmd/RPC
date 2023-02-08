@@ -1,4 +1,4 @@
-package org.alibaba.nettylearn.common.bean;
+package org.alibaba.rpc.common.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

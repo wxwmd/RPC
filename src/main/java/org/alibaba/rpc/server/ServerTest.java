@@ -1,4 +1,4 @@
-package org.alibaba.nettylearn.server;
+package org.alibaba.rpc.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -7,8 +7,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import org.alibaba.nettylearn.common.codec.RpcRequestDecoder;
-import org.alibaba.nettylearn.common.codec.RpcResponseEncoder;
+import org.alibaba.rpc.common.codec.RpcRequestDecoder;
+import org.alibaba.rpc.common.codec.RpcResponseEncoder;
 
 public class ServerTest {
 

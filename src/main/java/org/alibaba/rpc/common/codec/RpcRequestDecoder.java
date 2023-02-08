@@ -1,10 +1,10 @@
-package org.alibaba.nettylearn.common.codec;
+package org.alibaba.rpc.common.codec;
 
 import com.alibaba.fastjson.JSON;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import org.alibaba.nettylearn.common.bean.RpcRequest;
+import org.alibaba.rpc.common.bean.RpcRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

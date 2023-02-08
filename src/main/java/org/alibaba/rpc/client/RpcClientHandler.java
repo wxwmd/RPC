@@ -1,4 +1,4 @@
-package org.alibaba.nettylearn.client;
+package org.alibaba.rpc.client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

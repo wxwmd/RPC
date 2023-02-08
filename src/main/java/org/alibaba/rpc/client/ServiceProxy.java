@@ -4,7 +4,7 @@
  * 因此在client看来，这个方法就像是本地调用一样
  */
 
-package org.alibaba.nettylearn.client;
+package org.alibaba.rpc.client;
 
 import java.lang.reflect.Proxy;
 
