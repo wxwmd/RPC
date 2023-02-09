@@ -35,7 +35,9 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
             result = String.format("no such method: %s", methodName);
         }
 
-        RpcResponse rpcResponse = new RpcResponse(result);
+        // 返回rpc request对应的response
+        String requestId = msg.getRequestId();
+        RpcResponse rpcResponse = new RpcResponse(requestId, result);
         logger.info("rpc result: "+result);
         ctx.writeAndFlush(rpcResponse);
     }

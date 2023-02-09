@@ -6,7 +6,10 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.concurrent.DefaultPromise;
+import io.netty.util.concurrent.Promise;
 import org.alibaba.rpc.common.bean.RpcRequest;
+import org.alibaba.rpc.common.bean.RpcResponse;
 import org.alibaba.rpc.common.codec.RpcRequestEncoder;
 import org.alibaba.rpc.common.codec.RpcResponseDecoder;
 import org.slf4j.Logger;
@@ -14,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 public class ServiceInvocationHandler implements InvocationHandler {
     private static final Logger logger = LoggerFactory.getLogger(ServiceInvocationHandler.class);
@@ -35,7 +39,7 @@ public class ServiceInvocationHandler implements InvocationHandler {
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     protected void initChannel(NioSocketChannel ch) {
                         ch.pipeline().addLast(new RpcResponseDecoder());
-                        ch.pipeline().addLast(new RpcClientHandler());
+                        ch.pipeline().addLast(new RpcResponseHandler());
                         ch.pipeline().addLast(new RpcRequestEncoder());
                     }
                 });
@@ -49,16 +53,21 @@ public class ServiceInvocationHandler implements InvocationHandler {
         String serverAddress = "127.0.0.1";
         int serverPort = 8080;
         ChannelFuture channelFuture = bootstrap.connect(serverAddress, serverPort).sync();
-
+        RpcResponse response;
         try{
-            RpcRequest request = new RpcRequest("org.alibaba.rpc.server.service.HelloServiceImpl", method.getName(), args);
+            String requestId = UUID.randomUUID().toString();
+            RpcRequest request = new RpcRequest(requestId, "org.alibaba.rpc.server.service.HelloServiceImpl", method.getName(), args);
             channelFuture.channel().writeAndFlush(request);
-            channelFuture.channel().closeFuture().sync();
-        } catch (InterruptedException e){
-            e.printStackTrace();
+            Promise<RpcResponse> promise = new DefaultPromise<RpcResponse>(channelFuture.channel().eventLoop());
+            RpcResponseHandler.enrollPromises(requestId, promise);
+            promise.await();
+            response = promise.getNow();
+            logger.info("promise fire: "+response.toString());
+
+//            channelFuture.channel().closeFuture().sync();
         } finally {
             eventExecutors.shutdownGracefully();
         }
-        return null;
+        return  response.getResult();
     }
 }

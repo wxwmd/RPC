@@ -6,5 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class RpcResponse {
+    String responseId;
     Object result;
 }
