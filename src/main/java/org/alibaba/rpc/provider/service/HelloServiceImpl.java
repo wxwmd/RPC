@@ -1,4 +1,4 @@
-package org.alibaba.rpc.server.service;
+package org.alibaba.rpc.provider.service;
 
 public class HelloServiceImpl implements HelloService{
     public String Hello(String name) {

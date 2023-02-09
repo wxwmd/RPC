@@ -1,4 +1,4 @@
-package org.alibaba.rpc.client;
+package org.alibaba.rpc.consumer.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -33,8 +33,6 @@ public class RpcResponseHandler extends SimpleChannelInboundHandler<RpcResponse>
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcResponse msg) throws Exception {
         String responseId = msg.getResponseId();
-        logger.info(String.format("get response for %s", msg.getResponseId()));
-
         if (promiseMap.containsKey(responseId)){
             Promise<RpcResponse> promise = promiseMap.get(responseId);
             promise.setSuccess(msg);

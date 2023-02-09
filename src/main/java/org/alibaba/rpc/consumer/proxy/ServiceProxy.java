@@ -4,16 +4,18 @@
  * 因此在client看来，这个方法就像是本地调用一样
  */
 
-package org.alibaba.rpc.client;
+package org.alibaba.rpc.consumer.proxy;
+
+import org.alibaba.rpc.consumer.handler.ServiceInvocationHandler;
 
 import java.lang.reflect.Proxy;
 
 public class ServiceProxy {
-    public static <T> T createService(Class<T> interfaceName, String version){
+    public static <T> T createService(Class<T> interfaceName){
         return (T) Proxy.newProxyInstance(
                 interfaceName.getClassLoader(),
                 new Class[]{interfaceName},
-                new ServiceInvocationHandler(interfaceName, version)
+                new ServiceInvocationHandler(interfaceName)
         );
     }
 }

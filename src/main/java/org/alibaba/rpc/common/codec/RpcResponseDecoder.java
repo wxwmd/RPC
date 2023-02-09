@@ -19,7 +19,6 @@ public class RpcResponseDecoder extends ByteToMessageDecoder {
         byte[] responseBytes = new byte[length];
         in.readBytes(responseBytes, 0, length);
         RpcResponse rpcResponse = JSON.parseObject(responseBytes, RpcResponse.class);
-        logger.info("get rpc response: " + rpcResponse.getResult());
         out.add(rpcResponse);
     }
 }

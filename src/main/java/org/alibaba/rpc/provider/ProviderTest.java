@@ -1,4 +1,4 @@
-package org.alibaba.rpc.server;
+package org.alibaba.rpc.provider;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -11,7 +11,7 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import org.alibaba.rpc.common.codec.RpcRequestDecoder;
 import org.alibaba.rpc.common.codec.RpcResponseEncoder;
 
-public class ServerTest {
+public class ProviderTest {
 
     public static void main(String[] args) {
         EventLoopGroup bossGroup = new NioEventLoopGroup();

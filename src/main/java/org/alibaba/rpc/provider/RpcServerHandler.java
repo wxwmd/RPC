@@ -1,4 +1,4 @@
-package org.alibaba.rpc.server;
+package org.alibaba.rpc.provider;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
