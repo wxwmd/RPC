@@ -14,8 +14,8 @@ public class RpcRequestDecoder extends ByteToMessageDecoder {
     private static final Logger logger = LoggerFactory.getLogger(RpcRequestDecoder.class);
 
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-        // 消息长度
-        int length = in.readInt();
+        // 因为前面已经使用LengthFieldBasedFrameDecoder进行解码，此时in中保存的就是消息体，消息长度
+        int length = in.readableBytes();
 
         // 读取消息
         byte[] msgBytes = new byte[length];

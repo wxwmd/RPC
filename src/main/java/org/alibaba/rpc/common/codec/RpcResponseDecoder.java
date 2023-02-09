@@ -14,7 +14,8 @@ public class RpcResponseDecoder extends ByteToMessageDecoder {
     private static final Logger logger = LoggerFactory.getLogger(RpcResponseDecoder.class);
 
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-        int length = in.readInt();
+        // 因为前面使用了LengthFieldBasedFrameDecoder，因此这里in存放的就是整个消息体
+        int length = in.readableBytes();
         byte[] responseBytes = new byte[length];
         in.readBytes(responseBytes, 0, length);
         RpcResponse rpcResponse = JSON.parseObject(responseBytes, RpcResponse.class);

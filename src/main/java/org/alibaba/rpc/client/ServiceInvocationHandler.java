@@ -6,6 +6,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.util.concurrent.DefaultPromise;
 import io.netty.util.concurrent.Promise;
 import org.alibaba.rpc.common.bean.RpcRequest;
@@ -38,6 +39,7 @@ public class ServiceInvocationHandler implements InvocationHandler {
                 .channel(NioSocketChannel.class)
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     protected void initChannel(NioSocketChannel ch) {
+                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(1000, 0,4,0,4));
                         ch.pipeline().addLast(new RpcResponseDecoder());
                         ch.pipeline().addLast(new RpcResponseHandler());
                         ch.pipeline().addLast(new RpcRequestEncoder());

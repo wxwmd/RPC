@@ -7,6 +7,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import org.alibaba.rpc.common.codec.RpcRequestDecoder;
 import org.alibaba.rpc.common.codec.RpcResponseEncoder;
 
@@ -22,6 +23,7 @@ public class ServerTest {
             bootstrap.channel(NioServerSocketChannel.class);
             bootstrap.childHandler(new ChannelInitializer<NioSocketChannel>() {
                 protected void initChannel(NioSocketChannel ch) throws Exception {
+                    ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(1000, 0, 4, 0, 4));
                     ch.pipeline().addLast(new RpcRequestDecoder());
                     ch.pipeline().addLast(new RpcResponseEncoder());
                     ch.pipeline().addLast(new RpcServerHandler());
