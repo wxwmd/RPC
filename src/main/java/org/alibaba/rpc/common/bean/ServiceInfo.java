@@ -10,7 +10,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ServiceInfo {
-    String className;
-    String methodName;
-    Object[] params;
+    String serviceName;
+    String version;
 }

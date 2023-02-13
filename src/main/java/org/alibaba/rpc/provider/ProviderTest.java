@@ -1,41 +1,14 @@
 package org.alibaba.rpc.provider;
 
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import org.alibaba.rpc.common.codec.RpcRequestDecoder;
-import org.alibaba.rpc.common.codec.RpcResponseEncoder;
+import org.alibaba.rpc.common.bean.ServiceInfo;
+import org.alibaba.rpc.common.bean.ServiceProvider;
+import org.alibaba.rpc.provider.register.RpcRegister;
 
 public class ProviderTest {
 
     public static void main(String[] args) {
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-
-        try {
-            ServerBootstrap bootstrap = new ServerBootstrap();
-            bootstrap.group(bossGroup, workerGroup);
-            bootstrap.channel(NioServerSocketChannel.class);
-            bootstrap.childHandler(new ChannelInitializer<NioSocketChannel>() {
-                protected void initChannel(NioSocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(1000, 0, 4, 0, 4));
-                    ch.pipeline().addLast(new RpcRequestDecoder());
-                    ch.pipeline().addLast(new RpcResponseEncoder());
-                    ch.pipeline().addLast(new RpcServerHandler());
-                }
-            });
-            ChannelFuture channelFuture = bootstrap.bind(8080).sync();
-            channelFuture.channel().closeFuture().sync();
-        } catch (InterruptedException e){
-            e.printStackTrace();
-        } finally {
-            bossGroup.shutdownGracefully();
-            workerGroup.shutdownGracefully();
-        }
+        RpcRegister.registerService(new ServiceProvider("127.0.0.1", 8081),
+                "127.0.0.1:2181",
+                new ServiceInfo("org.alibaba.rpc.provider.service.HelloService", "1.0"));
     }
 }

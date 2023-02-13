@@ -55,8 +55,8 @@ public class ChannelManager {
      * @return consumer与提供此服务的某个provider之间的连接channel
      * @throws InterruptedException
      */
-    public static Channel getChannelByServiceInfo(ServiceInfo serviceInfo) throws InterruptedException {
-        ServiceProvider serviceProvider = ServiceDiscovery.providerDiscovery(serviceInfo);
+    public static Channel getChannelByServiceInfo(ServiceInfo serviceInfo, String zkConnectString) throws InterruptedException {
+        ServiceProvider serviceProvider = ServiceDiscovery.providerDiscovery(serviceInfo, zkConnectString);
 
         if (!providerChannels.containsKey(serviceProvider)){
             // 初始化channel

@@ -11,11 +11,11 @@ import org.alibaba.rpc.consumer.handler.ServiceInvocationHandler;
 import java.lang.reflect.Proxy;
 
 public class ServiceProxy {
-    public static <T> T createService(Class<T> interfaceName){
+    public static <T> T createService(Class<T> className, String version){
         return (T) Proxy.newProxyInstance(
-                interfaceName.getClassLoader(),
-                new Class[]{interfaceName},
-                new ServiceInvocationHandler(interfaceName)
+                className.getClassLoader(),
+                new Class[]{className},
+                new ServiceInvocationHandler(className, version)
         );
     }
 }

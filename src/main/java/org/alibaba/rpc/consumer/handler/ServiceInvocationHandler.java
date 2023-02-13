@@ -17,10 +17,12 @@ import java.util.UUID;
 public class ServiceInvocationHandler implements InvocationHandler {
     private static final Logger logger = LoggerFactory.getLogger(ServiceInvocationHandler.class);
 
-    private Class className;
+    private Class interfaceName;
+    private String version;
     
-    public ServiceInvocationHandler(Class className){
-        this.className = className;
+    public ServiceInvocationHandler(Class interfaceName, String version){
+        this.interfaceName = interfaceName;
+        this.version = version;
     }
 
     @Override
@@ -29,8 +31,8 @@ public class ServiceInvocationHandler implements InvocationHandler {
         RpcResponse response = null;
         try{
             // 根据serviceInfo获取和服务提供者之间的channel
-            ServiceInfo serviceInfo = new ServiceInfo(className.getName(), method.getName(), args);
-            Channel channel = ChannelManager.getChannelByServiceInfo(serviceInfo);
+            ServiceInfo serviceInfo = new ServiceInfo(interfaceName.getName(), version);
+            Channel channel = ChannelManager.getChannelByServiceInfo(serviceInfo, "127.0.0.1:2181");
             // 包装 RpcRequest
             String requestId = UUID.randomUUID().toString();
             RpcRequest request = new RpcRequest(requestId, "org.alibaba.rpc.provider.service.HelloServiceImpl", method.getName(), args);
