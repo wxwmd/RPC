@@ -10,14 +10,16 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.timeout.IdleStateHandler;
 import org.alibaba.rpc.common.bean.ServiceInfo;
 import org.alibaba.rpc.common.bean.ServiceProvider;
 import org.alibaba.rpc.common.codec.RpcRequestDecoder;
 import org.alibaba.rpc.common.codec.RpcResponseEncoder;
 import org.alibaba.rpc.common.zk.CuratorClient;
-import org.alibaba.rpc.provider.RpcServerHandler;
+import org.alibaba.rpc.provider.handler.RpcServerHandler;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public class RpcRegister {
 
@@ -54,6 +56,7 @@ public class RpcRegister {
                 bootstrap.channel(NioServerSocketChannel.class);
                 bootstrap.childHandler(new ChannelInitializer<NioSocketChannel>() {
                     protected void initChannel(NioSocketChannel ch) throws Exception {
+                        ch.pipeline().addLast(new IdleStateHandler(10L, 0, 0, TimeUnit.SECONDS));
                         ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(1000, 0, 4, 0, 4));
                         ch.pipeline().addLast(new RpcRequestDecoder());
                         ch.pipeline().addLast(new RpcResponseEncoder());

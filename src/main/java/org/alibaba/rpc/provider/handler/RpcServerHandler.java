@@ -1,7 +1,9 @@
-package org.alibaba.rpc.provider;
+package org.alibaba.rpc.provider.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import org.alibaba.rpc.common.bean.RpcRequest;
 import org.alibaba.rpc.common.bean.RpcResponse;
 import org.slf4j.Logger;
@@ -12,6 +14,11 @@ import java.lang.reflect.Method;
 
 public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
     private static final Logger logger = LoggerFactory.getLogger(RpcServerHandler.class);
+
+    @Override
+    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+        logger.info("channel registered");
+    }
 
     protected void channelRead0(ChannelHandlerContext ctx, RpcRequest msg) throws Exception {
         String className = msg.getClassName();
@@ -40,5 +47,17 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
         RpcResponse rpcResponse = new RpcResponse(requestId, result);
         logger.info("rpc result: "+result);
         ctx.writeAndFlush(rpcResponse);
+    }
+
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (evt instanceof IdleStateEvent){
+            IdleStateEvent idleStateEvent = (IdleStateEvent) evt;
+            if (IdleState.READER_IDLE.equals(idleStateEvent.state())){
+                // client channel time out，关闭channel
+                ctx.close();
+            }
+        }
     }
 }

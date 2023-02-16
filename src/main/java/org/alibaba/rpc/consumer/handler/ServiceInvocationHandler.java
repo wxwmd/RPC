@@ -33,6 +33,7 @@ public class ServiceInvocationHandler implements InvocationHandler {
             // 根据serviceInfo获取和服务提供者之间的channel
             ServiceInfo serviceInfo = new ServiceInfo(interfaceName.getName(), version);
             Channel channel = ChannelManager.getChannelByServiceInfo(serviceInfo, "127.0.0.1:2181");
+
             // 包装 RpcRequest
             String requestId = UUID.randomUUID().toString();
             RpcRequest request = new RpcRequest(requestId, "org.alibaba.rpc.provider.service.HelloServiceImpl", method.getName(), args);
