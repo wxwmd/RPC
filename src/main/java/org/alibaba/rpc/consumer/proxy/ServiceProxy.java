@@ -7,11 +7,17 @@
 package org.alibaba.rpc.consumer.proxy;
 
 import org.alibaba.rpc.consumer.handler.ServiceInvocationHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Proxy;
 
 public class ServiceProxy {
+    private static Logger logger = LoggerFactory.getLogger(ServiceProxy.class);
+
     public static <T> T createService(Class<T> className, String version){
+        logger.info(className.toString());
+
         return (T) Proxy.newProxyInstance(
                 className.getClassLoader(),
                 new Class[]{className},
